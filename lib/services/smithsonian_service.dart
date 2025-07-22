@@ -7,8 +7,8 @@ class SmithsonianService extends BaseImageService {
   static const String baseUrl = 'https://api.si.edu/openaccess/api/v1.0';
   static const Duration timeout = Duration(seconds: 10);
 
-  // API key for Smithsonian Open Access API
-  static const String apiKey = 'Z5vu6cWPwUXkacegAmmcvKEX4qAFuwB8F80mmD5z';
+  // API key for Smithsonian Open Access API - must be provided via dart-define
+  static const String? apiKey = String.fromEnvironment('SMITHSONIAN_API_KEY');
 
   @override
   String get serviceName => 'Smithsonian';
@@ -23,12 +23,27 @@ class SmithsonianService extends BaseImageService {
   @override
   String? get rateLimitInfo => null;
 
+  /// Check if the service is available (has API key)
+  bool get isAvailable => apiKey != null && apiKey!.isNotEmpty;
+
+  /// Throws an exception if the service is not available
+  void _checkAvailability() {
+    if (!isAvailable) {
+      throw Exception(
+        'Smithsonian service not available: API key not provided. '
+        'Please run with --dart-define=SMITHSONIAN_API_KEY=your_key',
+      );
+    }
+  }
+
   @override
   Future<List<ArtworkItem>> getRandomArtworks(int count) async {
+    _checkAvailability();
+
     try {
       // Use a very simple approach - search for items that are likely to have images
       final queryParams = {
-        'api_key': apiKey,
+        'api_key': apiKey!,
         'q': '*:*',
         'fqs': ['online_media_type:"Images"'].join(' AND '),
         'sort': 'random',
@@ -105,11 +120,13 @@ class SmithsonianService extends BaseImageService {
     int limit = 20,
     int offset = 0,
   }) async {
+    _checkAvailability();
+
     try {
       // Use a smarter search approach - combine user query with visual-focused terms
       // and target specific museum departments that have visual specimens
       final queryParams = {
-        'api_key': apiKey,
+        'api_key': apiKey!,
         'q': '$query AND (specimen OR object OR artwork OR collection)',
         'fqs': [
           'online_media_type:"Images"',
@@ -191,6 +208,8 @@ class SmithsonianService extends BaseImageService {
 
   @override
   Future<ArtworkItem> getArtworkById(String id) async {
+    _checkAvailability();
+
     try {
       final response = await http
           .get(

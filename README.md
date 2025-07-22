@@ -65,7 +65,7 @@ flutter pub get
 ```
 3. Run the app:
 ```bash
-#cd to stock_app
+#cd to stock_app  
 cd stock_app/
 
 # Without Smithsonian (3 services)
