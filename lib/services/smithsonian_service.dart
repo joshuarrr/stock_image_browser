@@ -8,7 +8,7 @@ class SmithsonianService extends BaseImageService {
   static const Duration timeout = Duration(seconds: 10);
 
   // API key for Smithsonian Open Access API - must be provided via dart-define
-  static const String? apiKey = String.fromEnvironment('SMITHSONIAN_API_KEY');
+    static const String? apiKey = String.fromEnvironment('SMITHSONIAN_API_KEY');
 
   @override
   String get serviceName => 'Smithsonian';
