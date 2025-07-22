@@ -252,9 +252,10 @@ class _BrowserHomeScreenState extends State<BrowserHomeScreen>
       String targetSource = _getSourceNameFromServiceId(selectedServiceId);
       print('BrowserHomeScreen: Looking for artworks from: $targetSource');
 
-      preservedArtworks = _randomArtworks
-          .where((artwork) => artwork.source == targetSource)
-          .toList();
+      preservedArtworks =
+          _randomArtworks
+              .where((artwork) => artwork.source == targetSource)
+              .toList();
 
       print(
         'BrowserHomeScreen: Found ${preservedArtworks.length} preserved artworks from $targetSource',
@@ -334,9 +335,10 @@ class _BrowserHomeScreenState extends State<BrowserHomeScreen>
       while (allNewArtworks.length < targetCount && attempts < maxAttempts) {
         attempts++;
 
-        final batchSize = attempts == 0
-            ? 8
-            : 12 + (attempts * 5); // Increase batch size on retries
+        final batchSize =
+            attempts == 0
+                ? 8
+                : 12 + (attempts * 5); // Increase batch size on retries
         final moreArtworks = await _serviceManager.getRandomArtworks(batchSize);
 
         // Add unique artworks (avoid duplicates)
@@ -776,12 +778,13 @@ class _BrowserHomeScreenState extends State<BrowserHomeScreen>
             hintText: 'Search images...',
             hintStyle: const TextStyle(color: Colors.grey),
             prefixIcon: const Icon(Icons.search, color: Colors.grey),
-            suffixIcon: _searchController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.grey),
-                    onPressed: _clearSearch,
-                  )
-                : null,
+            suffixIcon:
+                _searchController.text.isNotEmpty
+                    ? IconButton(
+                      icon: const Icon(Icons.clear, color: Colors.grey),
+                      onPressed: _clearSearch,
+                    )
+                    : null,
             border: InputBorder.none,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -832,9 +835,8 @@ class _BrowserHomeScreenState extends State<BrowserHomeScreen>
       return _buildErrorState();
     }
 
-    final artworks = _searchController.text.isNotEmpty
-        ? _searchResults
-        : _randomArtworks;
+    final artworks =
+        _searchController.text.isNotEmpty ? _searchResults : _randomArtworks;
 
     // Show empty state if no artworks and not loading/refreshing/searching
     if (artworks.isEmpty && !_isLoading && !_isRefreshing && !_isSearching) {
@@ -910,10 +912,11 @@ class _BrowserHomeScreenState extends State<BrowserHomeScreen>
     final currentServiceId = _serviceManager.activeServiceId;
     final currentQuery = _searchController.text.trim();
 
-    final hasCachedData = currentQuery.isEmpty
-        ? _randomCache.containsKey(currentServiceId)
-        : _searchCache.containsKey(currentServiceId) &&
-              _searchCache[currentServiceId]!.containsKey(currentQuery);
+    final hasCachedData =
+        currentQuery.isEmpty
+            ? _randomCache.containsKey(currentServiceId)
+            : _searchCache.containsKey(currentServiceId) &&
+                _searchCache[currentServiceId]!.containsKey(currentQuery);
 
     // If we have cached data but artworks list is empty, we're probably in a transition state
     if (hasCachedData) {
@@ -1047,9 +1050,8 @@ class _BrowserHomeScreenState extends State<BrowserHomeScreen>
     return GestureDetector(
       onTap: () async {
         // Save current scroll position
-        _lastScrollPosition = _scrollController.hasClients
-            ? _scrollController.offset
-            : 0.0;
+        _lastScrollPosition =
+            _scrollController.hasClients ? _scrollController.offset : 0.0;
 
         // Navigate to detail and wait for return
         await Navigator.push(
@@ -1119,8 +1121,14 @@ class _BrowserHomeScreenState extends State<BrowserHomeScreen>
             fit: StackFit.expand,
             children: [
               CachedNetworkImage(
-                imageUrl: artwork.imageUrl,
+                imageUrl: artwork.largeImageUrl ?? artwork.imageUrl,
                 fit: BoxFit.cover,
+                fadeInDuration: const Duration(
+                  milliseconds: 0,
+                ), // Instant fade-in for Hero animation
+                fadeOutDuration: const Duration(
+                  milliseconds: 0,
+                ), // Instant fade-out for Hero animation
                 placeholder: (context, url) => _buildShimmer(),
                 errorWidget: (context, url, error) {
                   // For Openverse images that reach this point, remove them from the grid entirely

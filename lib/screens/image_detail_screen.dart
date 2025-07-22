@@ -41,17 +41,27 @@ class ImageDetailScreen extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Hero(
-                  tag: 'artwork-${artwork.objectId}',
+                  tag:
+                      'artwork-${artwork.objectId}-${artwork.source}-${artwork.hashCode}',
                   child: InteractiveViewer(
                     minScale: 1.1,
                     maxScale: 4.0,
                     child: CachedNetworkImage(
                       imageUrl: artwork.largeImageUrl ?? artwork.imageUrl,
                       fit: BoxFit.cover,
+                      fadeInDuration: const Duration(
+                        milliseconds: 0,
+                      ), // Instant fade-in for Hero animation
+                      fadeOutDuration: const Duration(
+                        milliseconds: 0,
+                      ), // Instant fade-out for Hero animation
                       placeholder:
-                          (context, url) => const Center(
-                            child: CircularProgressIndicator(
-                              color: Color(0x80FFFFFF), // Icon secondary
+                          (context, url) => Container(
+                            color: const Color(0x5C583473),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0x80FFFFFF), // Icon secondary
+                              ),
                             ),
                           ),
                       errorWidget:
