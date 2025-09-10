@@ -144,7 +144,7 @@ class StockImageBrowserApp extends StatelessWidget {
         ),
 
         // Tab bar theme
-        tabBarTheme: TabBarTheme(
+        tabBarTheme: TabBarThemeData(
           labelColor: const Color(0xFFFFFFFF),
           unselectedLabelColor: const Color(0x80FFFFFF), // Secondary text
           indicatorColor: const Color(0xFFFFFFFF),
